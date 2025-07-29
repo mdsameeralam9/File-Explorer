@@ -13,7 +13,6 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import type { FileItem, NewItem } from './types';
 
 
-
 interface PropsInterface {
   data: FileItem;
   handleNewNode: (newNode: NewItem) => void;
@@ -154,7 +153,7 @@ const FolderAndFile: React.FC<PropsInterface> = memo(({
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onBlur={() => !inputValue.trim() && setShowInput(false)}
+              onBlur={(e) => !inputValue.trim() ? setShowInput(false) : handleSubmit(e, id)}
               placeholder={selectedIsFolder.current ? 'Folder name' : 'File name'}
               autoFocus
             />

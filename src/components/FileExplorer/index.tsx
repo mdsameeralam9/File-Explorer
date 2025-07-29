@@ -12,7 +12,7 @@ const FileExplorer: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const isResizing = useRef<boolean>(false);
     
-    const { addNewNodeToTree, deleteNodeFromTree, editNodeFromTree, filterTree } = useTreeOperations(fileData);
+    const { addNewNodeToTree, deleteNodeFromTree, editNodeFromTree, filterTree } = useTreeOperations();
 
     const filteredData = useMemo(() => {
         return filterTree(fileData, searchTerm) || fileData;
@@ -91,7 +91,7 @@ const FileExplorer: React.FC = () => {
             <div className="main-content">
                 <div className="content-placeholder">
                     <h2>Welcome to File Explorer</h2>
-                    <p>Select a file from the sidebar to view its contents</p>
+                    <p>Add,Delete and Update File and Folder </p>
                 </div>
             </div>
         </div>

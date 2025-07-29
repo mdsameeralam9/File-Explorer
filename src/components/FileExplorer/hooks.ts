@@ -18,7 +18,7 @@ export const useTreeOperations = () => {
     if (newNode.id === nodeTree.id) {
       return {
         ...nodeTree,
-        items: [...nodeTree.items, { ...newNode, id: Date.now().toString(), items: [] }]
+        items: [...nodeTree.items, { ...newNode, id: crypto.randomUUID(), items: [] }]
       };
     }
 
