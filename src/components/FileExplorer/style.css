@@ -1,0 +1,72 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body, html{
+    height: 100vh;
+    width: 100%;
+}
+
+.fileExplorerWraps {
+    display: flex;
+    background-color: black;
+    width: 100%;
+    height: 100vh;
+    color: white;
+    position: relative;
+}
+
+.fileExplorerWraps>.sidebar {
+    /* flex: 1; */
+    padding: 5px;
+}
+
+.fileExplorerWraps>.mainCcntent {
+    background-color: rgba(114, 113, 113, 0.306);
+    flex: 1;
+    padding: 5px;
+}
+
+.fileExplorerWraps>.resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #a34141;
+    cursor: col-resize;
+    z-index: 10;
+    transition: background 0.2s ease;
+
+}
+
+.fileExplorerWraps>.resizer:hover {
+    background: #a34141;
+    width: 5px;
+}
+
+.FolderAndFile {
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    align-items: center;
+    background-color: rgba(114, 113, 113, 0.306);
+}
+
+.FolderAndFile:hover{
+    background: gray;
+}
+
+.folderName,
+.folderAction {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.folderActionItem{
+    cursor: pointer;
+}
