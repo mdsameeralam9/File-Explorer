@@ -13,13 +13,12 @@ interface FileItem {
   items: FileItem[];
 }
 
-
-export const useTreeOperations = (fileData: FileItem) => {
+export const useTreeOperations = () => {
   const addNewNodeToTree = useCallback((newNode: NewItem, nodeTree: FileItem): FileItem => {
     if (newNode.id === nodeTree.id) {
       return {
         ...nodeTree,
-        items: [...nodeTree.items, { ...newNode, id: crypto.randomUUID(), items: [] }]
+        items: [...nodeTree.items, { ...newNode, id: Date.now().toString(), items: [] }]
       };
     }
 
