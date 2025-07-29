@@ -1,102 +1,99 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import './style.css';
-import FolderAndFile, { type FileItem, type NewItem } from './FolderAndFile';
+import FolderAndFile from './FolderAndFile';
 import explorer from './data';
-
-const addNewNodeToTree = (newNode: NewItem, nodeTree: FileItem): FileItem => {
-    if (newNode.id === nodeTree.id) {
-        return {
-            ...nodeTree,
-            items: [...nodeTree.items, { ...newNode, id: crypto.randomUUID(), items: [] }]
-        };
-    }
-
-    return {
-        ...nodeTree,
-        items: nodeTree.items.map(child => addNewNodeToTree(newNode, child))
-    };
-};
-
-const deleteNodeFromTree = (id: string, nodeTree: FileItem): FileItem | null => {
-    if (id === nodeTree.id) return null;
-
-    const updatedItems = nodeTree.items
-        .map(child => deleteNodeFromTree(id, child))
-        .filter(Boolean) as FileItem[];
-
-    return { ...nodeTree, items: updatedItems };
-};
-
-const editNodeFromTree = (newNode: NewItem, nodeTree: FileItem): FileItem => {
-    if (newNode.id === nodeTree.id) {
-        return { ...nodeTree, name: newNode.name };
-    }
-
-    return {
-        ...nodeTree,
-        items: nodeTree.items.map(child => editNodeFromTree(newNode, child))
-    };
-};
+import { useTreeOperations } from './hooks';
+import { FaFolder, FaSearch } from 'react-icons/fa';
+import type { FileItem, NewItem } from './types';
 
 const FileExplorer: React.FC = () => {
     const [sidebarWidth, setSidebarWidth] = useState<number>(300);
     const [fileData, setFileData] = useState<FileItem>(explorer);
+    const [searchTerm, setSearchTerm] = useState<string>('');
     const isResizing = useRef<boolean>(false);
+    
+    const { addNewNodeToTree, deleteNodeFromTree, editNodeFromTree, filterTree } = useTreeOperations(fileData);
 
-    const handleMouseDown = () => {
+    const filteredData = useMemo(() => {
+        return filterTree(fileData, searchTerm) || fileData;
+    }, [fileData, searchTerm, filterTree]);
+
+    const handleMouseDown = useCallback(() => {
         isResizing.current = true;
         document.body.style.cursor = 'col-resize';
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
-    };
+    }, []);
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = useCallback((e: MouseEvent) => {
         if (!isResizing.current) return;
         const newWidth = e.clientX;
-        if (newWidth > 100 && newWidth < 600) {
+        if (newWidth >= 200 && newWidth <= 600) {
             setSidebarWidth(newWidth);
         }
-    };
+    }, []);
 
-    const handleMouseUp = () => {
+    const handleMouseUp = useCallback(() => {
         isResizing.current = false;
         document.body.style.cursor = 'default';
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
-    };
+    }, [handleMouseMove]);
 
-    const handleNewNode = (newNode: NewItem) => {
+    const handleNewNode = useCallback((newNode: NewItem) => {
         const newTree = addNewNodeToTree(newNode, fileData);
-        setFileData({ ...newTree });
-    };
+        setFileData(newTree);
+    }, [fileData]);
 
-    const handleDeleteNode = (id: string) => {
+    const handleDeleteNode = useCallback((id: string) => {
         const newTree = deleteNodeFromTree(id, fileData);
-        if (newTree) setFileData({ ...newTree });
-    };
+        if (newTree) setFileData(newTree);
+    }, [fileData]);
 
-    const handleEditNode = (newNode: NewItem) => {
+    const handleEditNode = useCallback((newNode: NewItem) => {
         const newTree = editNodeFromTree(newNode, fileData);
-        setFileData({ ...newTree });
-    };
+        setFileData(newTree);
+    }, [fileData]);
 
     return (
-        <div className="fileExplorerWraps">
+        <div className="file-explorer">
             <div className="sidebar" style={{ width: `${sidebarWidth}px` }}>
-                <h3>File Explorer</h3>
-                <FolderAndFile
-                    data={fileData}
-                    handleNewNode={handleNewNode}
-                    handleDeleteNode={handleDeleteNode}
-                    handleEditNode={handleEditNode}
-                />
+                <div className="sidebar-header">
+                    <div className="header-title">
+                        <FaFolder className="header-icon" />
+                        <h3>Explorer</h3>
+                    </div>
+                    <div className="search-container">
+                        <FaSearch className="search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Search files..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
+                </div>
+                <div className="file-tree">
+                    <FolderAndFile
+                        data={filteredData}
+                        handleNewNode={handleNewNode}
+                        handleDeleteNode={handleDeleteNode}
+                        handleEditNode={handleEditNode}
+                    />
+                </div>
             </div>
             <div
                 onMouseDown={handleMouseDown}
                 className="resizer"
-                style={{ left: `${sidebarWidth - 1}px` }}
+                style={{ left: `${sidebarWidth}px` }}
             />
-            <div className="mainContent">mainContent</div>
+            <div className="main-content">
+                <div className="content-placeholder">
+                    <h2>Welcome to File Explorer</h2>
+                    <p>Select a file from the sidebar to view its contents</p>
+                </div>
+            </div>
         </div>
     );
 };

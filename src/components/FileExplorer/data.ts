@@ -1,68 +1,77 @@
-const explorer = {
-  id:"1",
+import type { FileItem } from "./types";
+
+
+const explorer: FileItem = {
+  id: "1",
   name: "root",
   isFolder: true,
   items: [
     {
-      id:"2",
+      id: "2",
       name: "public",
       isFolder: true,
       items: [
         {
-          id:"3",
-          name: "public nested 1",
+          id: "3",
+          name: "components",
           isFolder: true,
           items: [
             {
-              id:"4",
+              id: "4",
               name: "index.html",
               isFolder: false,
               items: []
             },
             {
-              id:"5",
-              name: "hello.html",
+              id: "5",
+              name: "favicon.ico",
               isFolder: false,
               items: []
             }
           ]
         },
         {
-          id:"6",
-          name: "public_nested_file",
+          id: "6",
+          name: "manifest.json",
           isFolder: false,
           items: []
         }
       ]
     },
     {
-      id:"7",
+      id: "7",
       name: "src",
       isFolder: true,
       items: [
         {
-          id:"8",
-          name: "App.js",
+          id: "8",
+          name: "App.tsx",
           isFolder: false,
           items: []
         },
         {
-          id:"9",
-          name: "Index.js",
+          id: "9",
+          name: "main.tsx",
           isFolder: false,
           items: []
         },
         {
-          id:"10",
-          name: "styles.css",
+          id: "10",
+          name: "index.css",
           isFolder: false,
           items: []
         }
       ]
     },
     {
-      id:"11",
+      id: "11",
       name: "package.json",
+      isFolder: false,
+      items: []
+    },
+    {
+      id: "12",
+      name: "tsconfig.json",
       isFolder: false,
       items: []
     }
